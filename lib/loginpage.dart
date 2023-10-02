@@ -146,7 +146,22 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "Create an account",
                     ),
-                  )
+                  ),
+                  Container(
+                    width: 300,
+                    height: 45,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.white),
+                    child: TextButton(
+                      child: const Text(
+                        "Continue with Google",
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
                 ],
               ),
             )),
