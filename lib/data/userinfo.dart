@@ -1,11 +1,11 @@
-class User {
+class Users {
   String id;
   final String name;
   final String email;
   final String phone;
   final String password;
 
-  User({
+  Users({
     this.id = '',
     required this.name,
     required this.email,

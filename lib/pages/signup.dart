@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hotel_booking_application/loginpage.dart';
-import 'package:hotel_booking_application/userinfo.dart';
+import 'package:hotel_booking_application/pages/loginpage.dart';
+import 'package:hotel_booking_application/data/userinfo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -180,13 +180,14 @@ class _SignUpState extends State<SignUp> {
           style: TextStyle(color: Colors.white, fontSize: 15),
         ),
         onPressed: () {
-          final user = User(
+          final user = Users(
             name: _name.text,
             email: _email.text,
             password: _password.text,
             phone: _phone.text,
           );
           createUser(user);
+          createUserWithEmailAndPassword();
         },
       ),
     );
@@ -202,7 +203,51 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Future createUser(User user) async {
+  createUserWithEmailAndPassword() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _email.text,
+        password: _password.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return AlertDialog(
+          title: const Text("Signup failed!"),
+          titleTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+          actionsOverflowButtonSpacing: 20,
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Ok")),
+          ],
+          content:const  Text("Password is too weak!"),
+        );
+      } else if (e.code == 'email-already-in-use') {
+        return AlertDialog(
+          title: const Text("Signup failed!"),
+          titleTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
+          actionsOverflowButtonSpacing: 20,
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Ok")),
+          ],
+          content: const 
+              Text("Email  is already is use!\n Please use different email"),
+        );
+      }
+    }
+
+    Navigator.pop(context);
+  }
+
+  Future createUser(Users user) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc();
     user.id = docUser.id;
     final json = user.toJson();

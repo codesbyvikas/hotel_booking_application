@@ -10,6 +10,7 @@ dependencies:
   google_fonts: ^6.1.0
   cloud_firestore:
   firebase_core:
+  firebase_auth:
   flutter:
     sdk: flutter
 
@@ -24,3 +25,4 @@ flutter:
   assets:
     - assets/images/hotel.png
     - assets/images/hotel_book.png
+    - assets/images/google.png
