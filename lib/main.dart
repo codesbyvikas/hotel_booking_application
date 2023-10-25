@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_booking_application/pages/auth_page.dart';
-import 'package:hotel_booking_application/pages/loginpage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future main() async {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hotel_booking_application/data/hotelcard.dart';
+import 'package:hotel_booking_application/pages/hotellist.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -7,49 +9,49 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          shadowColor: Colors.transparent,
-          title: const Text(
-            "Welcome",
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ),
         body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: ListView(
-              children: <Widget>[
-                Image(),
-                const SizedBox(height: 10),
-                Txt(),
-                const SizedBox(height: 10),
+              children: [
+                const Text(
+                  "Welcome",
+                  style: TextStyle(fontSize: 26),
+                ),
+                const SizedBox(height: 20),
+                searchBar(),
+                const SizedBox(height: 20),
+                Text(
+                  "Trending",
+                  style: TextStyle(fontSize: 20),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                trendingHotels(),
+                SizedBox(
+                  height: 10,
+                ),
                 Logout(),
               ],
             )));
   }
 
-  Widget Image() {
-    return Container(
-      height: 200,
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage(
-          "assets/images/hotel.png",
-        ),
-        fit: BoxFit.fill,
-      )),
-    );
-  }
-
-  Widget  Txt() {
-    return const Center(
-      child: Text("Welcome",
-          style: TextStyle(
-            color: Color.fromARGB(255, 130, 121, 121),
-            fontSize: 22,
-          )),
+  Widget searchBar() {
+    return Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      shadowColor: const Color(0x55434343),
+      child: const TextField(
+        textAlign: TextAlign.start,
+        textAlignVertical: TextAlignVertical.center,
+        decoration: InputDecoration(
+            hintText: "search for hotels",
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.black45,
+            ),
+            border: InputBorder.none),
+      ),
     );
   }
 
@@ -73,7 +75,7 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          child:const  Center(
+          child: const Center(
             child: Text(
               'Logout',
               style: TextStyle(
@@ -84,6 +86,23 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget trendingHotels() {
+    return Container(
+      height: 250,
+      child: ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        children: [
+          hotelCard(urls[0], "Paramount Hotel", "Mumbai,India", 4),
+          hotelCard(urls[1], "Hotel Vishwash", " Bangalore,India", 4.5),
+          hotelCard(urls[3], "Abode", "Italy", 3),
+          hotelCard(urls[2], "EverStay", "New York,USA", 4),
+          hotelCard(urls[4], "HoverStay ", "London, UK", 3.5)
+        ],
       ),
     );
   }
