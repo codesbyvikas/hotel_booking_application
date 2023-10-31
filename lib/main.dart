@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_booking_application/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hotel_booking_application/splashscree.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: AuthPage(),
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
