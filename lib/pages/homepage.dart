@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking_application/createdwidgets.dart/hotelcard.dart';
 import 'package:hotel_booking_application/data/hotellist.dart';
 import 'package:hotel_booking_application/models/api.dart';
 import 'package:hotel_booking_application/models/hotels.dart';
+
 import 'package:hotel_booking_application/pages/hoteldetails.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -20,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DataHome obj = DataHome();
+  HotelsData hoteldata = HotelsData();
 
   void initState() {
     super.initState();
@@ -109,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       // suggestedHotels(),
-                      HotelBuilder(),
+                      hotelBuilder(),
                       logout(),
                     ],
                   ))),
@@ -382,7 +380,7 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget HotelBuilder() {
+  Widget hotelBuilder() {
     return FutureBuilder(
         future: APiCalls().fetchData(),
         builder: (context, snapshot) {
@@ -484,7 +482,7 @@ class _HomePageState extends State<HomePage> {
                 });
             // Text(snapshot.data.results.data.)
           } else {
-            return Text("Error");
+            return Text("Error data not stored");
           }
         });
   }

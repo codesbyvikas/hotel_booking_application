@@ -1,5 +1,4 @@
 import 'package:hotel_booking_application/models/hotels.dart';
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -30,10 +29,10 @@ class APiCalls {
       if (response.statusCode == 200) {
         // Successful response
         final jsonData = json.decode(response.body);
+
         HotelsData data = HotelsData.fromJson(jsonData);
-         print(jsonData);
+        print(jsonData);
         return data;
-    
       } else {
         // Handle other status codes
         print('Error: ${response.statusCode}');
