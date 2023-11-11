@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_booking_application/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:hotel_booking_application/splashscree.dart';
+import 'package:hotel_booking_application/pages/splashscree.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

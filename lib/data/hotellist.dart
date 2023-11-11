@@ -1,4 +1,6 @@
 import 'hoteldata.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class DataHome {
   List<Data> getData = [
@@ -117,3 +119,5 @@ List<String> recentUrls = [
   "https://media.timeout.com/images/105892648/image.jpg",
   "https://www.travelandleisure.com/thmb/pCU_Y9fbQe4CT5Q73J9k2Bqd_bI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/header-grand-velas-los-cabos-MXALLINC0222-46d3772ad56f4493a83e1bcb49e119f9.jpg"
 ];
+
+
