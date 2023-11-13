@@ -17,100 +17,78 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DataHome obj = DataHome();
-  HotelsData hoteldata = HotelsData();
+  HotelsModel hoteldata = HotelsModel();
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      APiCalls().fetchData();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          body:
-              // body: FutureBuilder<HotelsData?>(
-              //   future: fetchHotelsData(),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return CircularProgressIndicator();
-              //     } else if (snapshot.hasError) {
-              //       return Text('Error: ${snapshot.error}');
-              //     } else if (snapshot.hasData) {
-              //       return Text('Data: ${snapshot.data!.name}');
-              //     } else {
-              //       return Text('No data available');
-              //     }
-              //   },
-              // ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  child: ListView(
+          body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              child: ListView(
+                children: [
+                  const Text(
+                    "Hotels.com",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Color.fromARGB(255, 16, 183, 136),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const Text(
+                    "Find your perfect",
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Text(
+                    "Stay",
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  searchBar(),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Recently Viewed",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  recentHotels(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
                     children: [
                       const Text(
-                        "Hotels.com",
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Color.fromARGB(255, 16, 183, 136),
-                          fontSize: 26,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const Text(
-                        "Find your perfect",
-                        style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Text(
-                        "Stay",
-                        style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      searchBar(),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Recently Viewed",
+                        "Trending",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 5),
-                      recentHotels(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Trending",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          TextButton(
-                              onPressed: () {}, child: const Text("See All"))
-                        ],
-                      ),
-                      trendingHotels(),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Text(
-                        "Suggested",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      // suggestedHotels(),
-                      hotelBuilder(),
-                      logout(),
+                      TextButton(onPressed: () {}, child: const Text("See All"))
                     ],
-                  ))),
+                  ),
+                  trendingHotels(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const Text(
+                    "Suggested",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  // suggestedHotels(),
+                  hotelBuilder(),
+                  logout(),
+                ],
+              ))),
     );
   }
 
@@ -382,108 +360,86 @@ class _HomePageState extends State<HomePage> {
 
   Widget hotelBuilder() {
     return FutureBuilder(
-        future: APiCalls().fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: obj.getData.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => HotelDetails(
-                                      imgUrl: obj.getData[index].imageUrl
-                                          .toString(),
-                                      hotelName:
-                                          obj.getData[index].name.toString(),
-                                      location: obj.getData[index].location
-                                          .toString(),
-                                      rating: 4,
-                                      price:
-                                          obj.getData[index].price.toString(),
-                                      facilities: obj.getData[index].facilities
-                                          .toString(),
-                                    )));
-                          },
-                          child: Container(
-                            height: 200,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(30),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                      obj.getData[index].imageUrl.toString(),
-                                    ),
-                                    fit: BoxFit.cover)),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    snapshot.data!.results!.data![index].name
+      future: ApiCalls.fetchHotelData(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          // Access the data through the model class
+          var hoteldata = snapshot.data['results']['data'];
+          HotelsModel responsedata = HotelsModel.fromJson(snapshot.data);
+
+          return ListView.builder(
+              itemCount: responsedata.results!.data!.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => HotelDetails(
+                                  imgUrl: responsedata.results!.data![index]
+                                      .photo!.images!.large!.url
+                                      .toString(),
+                                  hotelName: responsedata
+                                      .results!.data![index].name
+                                      .toString(),
+                                  location: responsedata
+                                      .results!.data![index].locationString
+                                      .toString(),
+                                  rating: 4,
+                                  price: responsedata
+                                      .results!.data![index].price
+                                      .toString(),
+                                  facilities: responsedata
+                                      .results!.data![index].description
+                                      .toString())));
+                        },
+                        child: Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(30),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                    responsedata.results!.data![index].photo!
+                                        .images!.medium!.url
                                         .toString(),
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
                                   ),
-                                  Text(
-                                    obj.getData[index].location.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      for (var i = 0; i < 4; i++)
-                                        const Icon(
-                                          Icons.star,
-                                          color: Color(0xFFFE8C68),
-                                          size: 18,
-                                        ),
-                                    ],
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        color: const Color.fromARGB(
-                                            255, 16, 183, 136)),
-                                    child: Text(
-                                      "Starts from  ₹" +
-                                          obj.getData[index].price.toString(),
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.white),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
+                                  fit: BoxFit.cover)),
                         ),
-                      ],
-                    ),
-                  );
-                });
-            // Text(snapshot.data.results.data.)
-          } else {
-            return Text("Error data not stored");
-          }
-        });
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ListTile(
+                            title: Text(
+                              responsedata.results!.data![index].name
+                                  .toString(),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            trailing: Text(
+                              responsedata.results!.data![index].price
+                                  .toString(),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            subtitle: Text(
+                              responsedata.results!.data![index].locationString
+                                  .toString(),
+                            ),
+                          )),
+                    ],
+                  ),
+                );
+              });
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return const Text('Unknown error');
+        }
+      },
+    );
   }
 }

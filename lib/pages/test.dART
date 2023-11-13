@@ -1,38 +1,50 @@
+
+
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<void> fetchData() async {
-  final url = Uri.parse('https://worldwide-hotels.p.rapidapi.com/search');
-  
-  final headers = {
-    'content-type': 'application/x-www-form-urlencoded',
-    'X-RapidAPI-Key': '684687ead8mshf5bec3a5d587221p102c60jsnc0e5ab005c99',
-    'X-RapidAPI-Host': 'worldwide-hotels.p.rapidapi.com'
-  };
+    final String apiUrl = 'https://worldwide-hotels.p.rapidapi.com/search';
 
-  final encodedParams = {
-    'location_id': '45963',
-    'language': 'en_US',
-    'currency': 'USD',
-    'offset': '0',
-  };
+    Map<String, String> headers = {
+      'content-type': 'application/x-www-form-urlencoded',
+      'X-RapidAPI-Key': '684687ead8mshf5bec3a5d587221p102c60jsnc0e5ab005c99',
+      'X-RapidAPI-Host': 'worldwide-hotels.p.rapidapi.com',
+    };
 
-  try {
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: encodedParams,
-    );
+    Map<String, String> data = {
+      'location_id': '45963',
+      'language': 'en_US',
+      'currency': 'USD',
+      'offset': '0',
+    };
 
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else {
-      print('Error: ${response.statusCode}');
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: data,
+      );
+
+      if (response.statusCode == 200) {
+        // Successful response
+        final jsonData = json.decode(response.body);
+
+        // HotelsData data = HotelsData.fromJson(jsonData);
+        print(jsonData);
+        // return data;
+      } else {
+        // Handle other status codes
+        print('Error: ${response.statusCode}');
+        // return null;
+      }
+    } catch (error) {
+      // Handle network or other errors
+      print('Error: $error');
+      // return null;
     }
-  } catch (error) {
-    print('Error: $error');
   }
-}
 
-void main() {
-  fetchData();
-}
+  void main(){
+    fetchData();
+  }

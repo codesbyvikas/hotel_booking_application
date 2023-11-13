@@ -25,67 +25,64 @@ class HotelDetails extends StatelessWidget {
         color: Colors.grey.shade500,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "₹$price",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                ),
-                const SizedBox(
-                  width: 180,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color.fromARGB(255, 16, 183, 136),
-                    ),
-                    child: TextButton(
-                      child: const Text(
-                        "Book Now",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "₹$price",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              const SizedBox(
+                width: 110,
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromARGB(255, 16, 183, 136),
+                  ),
+                  child: TextButton(
+                    child: const Text(
+                      "Book Now",
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
-                      onPressed: () {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text(
-                              'Booking status',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                            content: const Text(
-                                'Your Booking is Successfully Confirmed'),
-                            actions: <Widget>[
-                              Center(
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        Colors.green, // Background Color
-                                  ),
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'okay'),
-                                  child: const Text(
-                                    'okay',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                    ),
+                    onPressed: () {
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text(
+                            'Booking status',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                          content: const Text(
+                              'Your Booking is Successfully Confirmed'),
+                          actions: <Widget>[
+                            Center(
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.green, // Background Color
+                                ),
+                                onPressed: () => Navigator.pop(context, 'okay'),
+                                child: const Text(
+                                  'okay',
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -187,7 +184,7 @@ class HotelDetails extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Facilities",
+                      "Details",
                       style: TextStyle(fontSize: 22),
                     ),
                     Text(
@@ -243,10 +240,10 @@ class HotelDetails extends StatelessWidget {
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 114, 195, 233),
+                        color: const Color.fromARGB(255, 114, 195, 233),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.pool, size: 40),
+                      child: const Icon(Icons.pool, size: 40),
                     ),
                   ],
                 ),
