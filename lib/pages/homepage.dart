@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hotel_booking_application/createdwidgets.dart/hotelcard.dart';
+import 'package:hotel_booking_application/constants/hotelcard.dart';
+import 'package:hotel_booking_application/constants/hotelcard2.dart';
 import 'package:hotel_booking_application/data/hotellist.dart';
 import 'package:hotel_booking_application/models/api.dart';
 import 'package:hotel_booking_application/models/hotels.dart';
@@ -9,7 +10,7 @@ import 'package:hotel_booking_application/pages/hoteldetails.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,7 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DataHome obj = DataHome();
   HotelsModel hoteldata = HotelsModel();
-
+  @override
   void initState() {
     super.initState();
   }
@@ -80,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     height: 15,
                   ),
+
                   const Text(
                     "Suggested",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -157,7 +159,7 @@ class _HomePageState extends State<HomePage> {
             imgUrl: recentUrls[0],
             hotelName: "gg",
             location: "Chandigarh",
-            rating: 4,
+            rating: "4",
             price: "6554",
             facilities: """Best Quality spacious rooms
             24*7 room service available
@@ -169,7 +171,7 @@ class _HomePageState extends State<HomePage> {
             imgUrl: recentUrls[1],
             hotelName: "Riverview",
             location: " Indore,India",
-            rating: 3,
+            rating: "3",
             price: "5422",
             facilities: """Best Quality spacious rooms
             24*7 room service available
@@ -181,7 +183,7 @@ class _HomePageState extends State<HomePage> {
             imgUrl: recentUrls[2],
             hotelName: "Stiffer",
             location: "Germany",
-            rating: 5,
+            rating: "5",
             price: "4512",
             facilities: """Best Quality spacious rooms
             24*7 room service available
@@ -206,7 +208,7 @@ class _HomePageState extends State<HomePage> {
               imgUrl: trendingUrls[0],
               hotelName: "Paramount Hotel",
               location: "Mumbai,India",
-              rating: 4,
+              rating: "4",
               price: "5000",
               facilities: """Best Quality spacious rooms
               24*7 room service available
@@ -218,7 +220,7 @@ class _HomePageState extends State<HomePage> {
               imgUrl: trendingUrls[1],
               hotelName: "Hotel Vishwash",
               location: "Bangalore,India",
-              rating: 3.5,
+              rating: "3",
               price: "3500",
               facilities: """Best Quality spacious rooms
               24*7 room service available
@@ -230,7 +232,7 @@ class _HomePageState extends State<HomePage> {
               imgUrl: trendingUrls[3],
               hotelName: "Abode",
               location: "Italy",
-              rating: 5,
+              rating: "5",
               price: "6522",
               facilities: """Best Quality spacious rooms
               24*7 room service available
@@ -243,7 +245,7 @@ class _HomePageState extends State<HomePage> {
               hotelName: "hjhg",
               // hotelName: hotelsdata != null ? hotelsdata!.name : "r",
               location: "New York,USA",
-              rating: 4,
+              rating: "4",
               price: "5457",
               facilities: """Best Quality spacious rooms
               24*7 room service available
@@ -255,7 +257,7 @@ class _HomePageState extends State<HomePage> {
               imgUrl: trendingUrls[4],
               hotelName: "HoverStay ",
               location: "London, UK",
-              rating: 5,
+              rating: "5",
               price: "35443",
               facilities: """Best Quality spacious rooms
               24*7 room service available
@@ -285,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                               imgUrl: obj.getData[index].imageUrl.toString(),
                               hotelName: obj.getData[index].name.toString(),
                               location: obj.getData[index].location.toString(),
-                              rating: 4,
+                              rating: "4",
                               price: obj.getData[index].price.toString(),
                               facilities:
                                   obj.getData[index].facilities.toString(),
@@ -359,87 +361,49 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget hotelBuilder() {
-    return FutureBuilder(
-      future: ApiCalls.fetchHotelData(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
-          // Access the data through the model class
-          var hoteldata = snapshot.data['results']['data'];
-          HotelsModel responsedata = HotelsModel.fromJson(snapshot.data);
+    return SingleChildScrollView(
+      child: FutureBuilder(
+        future: ApiCalls.fetchHotelData(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            // Access the data through the model class
+            HotelsModel responsedata = HotelsModel.fromJson(snapshot.data);
 
-          return ListView.builder(
-              itemCount: responsedata.results!.data!.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => HotelDetails(
-                                  imgUrl: responsedata.results!.data![index]
-                                      .photo!.images!.large!.url
-                                      .toString(),
-                                  hotelName: responsedata
-                                      .results!.data![index].name
-                                      .toString(),
-                                  location: responsedata
-                                      .results!.data![index].locationString
-                                      .toString(),
-                                  rating: 4,
-                                  price: responsedata
-                                      .results!.data![index].price
-                                      .toString(),
-                                  facilities: responsedata
-                                      .results!.data![index].description
-                                      .toString())));
-                        },
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(30),
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                    responsedata.results!.data![index].photo!
-                                        .images!.medium!.url
-                                        .toString(),
-                                  ),
-                                  fit: BoxFit.cover)),
-                        ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: ListTile(
-                            title: Text(
-                              responsedata.results!.data![index].name
-                                  .toString(),
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            trailing: Text(
-                              responsedata.results!.data![index].price
-                                  .toString(),
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            subtitle: Text(
-                              responsedata.results!.data![index].locationString
-                                  .toString(),
-                            ),
-                          )),
-                    ],
-                  ),
-                );
-              });
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return const Text('Unknown error');
-        }
-      },
+            return SingleChildScrollView(
+              child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: responsedata.results!.data!.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: HotelCard2(
+                            imgUrl: responsedata.results!.data![index].photo!
+                                .images!.medium!.url
+                                .toString(),
+                            hotelName: responsedata.results!.data![index].name
+                                .toString(),
+                            location: responsedata
+                                .results!.data![index].locationString
+                                .toString(),
+                            rating: responsedata.results!.data![index].rating
+                                .toString(),
+                            price: responsedata.results!.data![index].price
+                                .toString(),
+                            facilities: responsedata
+                                .results!.data![index].description
+                                .toString()));
+                  }),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return const Text('Unknown error');
+          }
+        },
+      ),
     );
   }
 }

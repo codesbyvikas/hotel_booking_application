@@ -6,7 +6,7 @@ class HotelCard extends StatelessWidget {
   final String imgUrl;
   final String hotelName;
   final String location;
-  final double rating;
+  final String rating;
   final String price;
   final String facilities;
   const HotelCard(
@@ -55,7 +55,7 @@ class HotelCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    for (var i = 0; i < rating; i++)
+                    for (var i = 0; i < int.parse(rating); i++)
                       const Icon(
                         Icons.star,
                         color: Color(0xFFFE8C68),

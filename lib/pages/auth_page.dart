@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:hotel_booking_application/pages/homepage.dart';
+import 'package:hotel_booking_application/constants/navigation.dart';
 import 'package:hotel_booking_application/pages/loginpage.dart';
 
 class AuthPage extends StatelessWidget {
@@ -17,7 +16,7 @@ class AuthPage extends StatelessWidget {
               return const CircularProgressIndicator();
             } else {
               if (snapshot.hasData) {
-                return  HomePage();
+                return const NavigatorBar();
               } else {
                
                 return const LoginPage();

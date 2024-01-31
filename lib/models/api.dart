@@ -7,7 +7,7 @@ class ApiCalls {
     var url = 'https://worldwide-hotels.p.rapidapi.com/search';
     var headers = {
       'content-type': 'application/x-www-form-urlencoded',
-      'X-RapidAPI-Key': '5ae7de98e2msh1941f7a413b578bp1127bcjsnc74e41329b80',
+      'X-RapidAPI-Key': '684687ead8mshf5bec3a5d587221p102c60jsnc0e5ab005c99',
       'X-RapidAPI-Host': 'worldwide-hotels.p.rapidapi.com',
     };
 

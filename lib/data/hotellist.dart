@@ -1,6 +1,5 @@
 import 'hoteldata.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 
 class DataHome {
   List<Data> getData = [

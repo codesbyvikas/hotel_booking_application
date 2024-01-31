@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_booking_application/pages/homepage.dart';
 import 'package:hotel_booking_application/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:oktoast/oktoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -142,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
             validator: (value) {
               if (value!.isEmpty) {
                 return "Password cannot be Empty!";
-              } else if (value.length < 8) {
+              } else if (value.length < 6) {
                 return "Password length should be greater than 8 characters";
               } else {
                 return null;
@@ -216,8 +217,7 @@ class _LoginPageState extends State<LoginPage> {
       await Future.delayed(const Duration(seconds: 1));
       if (mounted) {
         await Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (BuildContext context) => HomePage()),
+          MaterialPageRoute(builder: (BuildContext context) => HomePage()),
         );
       }
     }
@@ -226,43 +226,27 @@ class _LoginPageState extends State<LoginPage> {
   signInWithEmailAndPassword() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _loginemail.text,
-        password: _loginpassword.text,
+        email: _loginemail.text.trim(),
+        password: _loginpassword.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-email') {
+      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
         if (mounted) {
-          return AlertDialog(
-            title: const Text("Login failed!"),
-            titleTextStyle: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
-            actionsOverflowButtonSpacing: 20,
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Ok")),
-            ],
-            content: const Text("Incorrect Email!"),
-          );
+          _showToast("Incorrect Login Credentials");
         }
       } else if (e.code == 'wrong-password') {
-        return AlertDialog(
-          title: const Text("Login failed!"),
-          titleTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),
-          actionsOverflowButtonSpacing: 20,
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Ok")),
-          ],
-          content: const Text("Incorrect Password!"),
-        );
+        _showToast("Incorrect Login Credentials");
+      } else {
+        _showToast("Please check you email");
       }
     }
+  }
+
+  void _showToast(String message) {
+    showToast(
+      message,
+      duration: const Duration(seconds: 2),
+      position: ToastPosition.bottom,
+    );
   }
 }

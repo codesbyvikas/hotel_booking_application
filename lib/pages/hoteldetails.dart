@@ -1,14 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:oktoast/oktoast.dart';
 
-class HotelDetails extends StatelessWidget {
+class HotelDetails extends StatefulWidget {
   final String imgUrl;
   final String hotelName;
   final String location;
-  final double rating;
+  final String rating;
   final String price;
   final String facilities;
 
-  const HotelDetails(
+  HotelDetails(
       {super.key,
       required this.imgUrl,
       required this.hotelName,
@@ -17,6 +20,11 @@ class HotelDetails extends StatelessWidget {
       required this.price,
       required this.facilities});
 
+  @override
+  State<HotelDetails> createState() => _HotelDetailsState();
+}
+
+class _HotelDetailsState extends State<HotelDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +38,10 @@ class HotelDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "₹$price",
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                widget.price,
+                style: const TextStyle(fontSize: 20, color: Colors.white),
               ),
-              const SizedBox(
-                width: 110,
-              ),
+              const Spacer(),
               InkWell(
                 onTap: () {},
                 child: Container(
@@ -96,7 +102,7 @@ class HotelDetails extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(imgUrl), fit: BoxFit.fill),
+                      image: NetworkImage(widget.imgUrl), fit: BoxFit.fill),
                 ),
                 child: Stack(
                   children: [
@@ -108,7 +114,7 @@ class HotelDetails extends StatelessWidget {
                           Container(
                             height: 40,
                             decoration: BoxDecoration(
-                                color: Color(0xffF8FCFF),
+                                color: const Color(0xffF8FCFF),
                                 borderRadius: BorderRadius.circular(12)),
                             width: 40,
                             child: IconButton(
@@ -117,21 +123,41 @@ class HotelDetails extends StatelessWidget {
                               },
                               icon: const Icon(
                                 Icons.arrow_back,
-                                size: 30,
+                                size: 20,
                               ),
                             ),
                           ),
-                          Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: Color(0xffF8FCFF),
-                                borderRadius: BorderRadius.circular(12)),
-                            width: 40,
-                            child: const Icon(
-                              Icons.favorite_border,
-                              size: 30,
-                            ),
-                          ),
+                          StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("users-favourite-hotels")
+                                  .doc(FirebaseAuth.instance.currentUser!.email)
+                                  .collection("hotels")
+                                  .where("name", isEqualTo: widget.hotelName)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.data == null) {
+                                  return const Text("");
+                                }
+                                return Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xffF8FCFF),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  width: 40,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.favorite),
+                                    color: snapshot.data!.docs.isEmpty
+                                        ? Colors.grey
+                                        : Colors.red,
+                                    onPressed: () {
+                                      snapshot.data!.docs.isEmpty
+                                          ? addToFavourite()
+                                          : removeFromFavorite();
+                                    },
+                                  ),
+                                );
+                              }),
                         ],
                       ),
                     ),
@@ -145,7 +171,7 @@ class HotelDetails extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      hotelName,
+                      widget.hotelName,
                       style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w600,
@@ -153,8 +179,8 @@ class HotelDetails extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.location_on, size: 20),
-                        Text(location,
+                        const Icon(Icons.location_on, size: 20),
+                        Text(widget.location,
                             style: const TextStyle(
                                 fontStyle: FontStyle.italic, fontSize: 20)),
                       ],
@@ -162,7 +188,9 @@ class HotelDetails extends StatelessWidget {
                     const SizedBox(height: 5),
                     Row(
                       children: [
-                        for (var i = 0; i < rating; i++)
+                        for (var i = 0;
+                            i < double.parse(widget.rating).toInt();
+                            i++)
                           const Icon(
                             Icons.star,
                             color: Color(0xFFFE8C68),
@@ -171,7 +199,7 @@ class HotelDetails extends StatelessWidget {
                         const SizedBox(
                           width: 5,
                         ),
-                        Text("$rating/5")
+                        Text("${widget.rating}/5")
                       ],
                     ),
                   ],
@@ -188,7 +216,7 @@ class HotelDetails extends StatelessWidget {
                       style: TextStyle(fontSize: 22),
                     ),
                     Text(
-                      facilities,
+                      widget.facilities,
                       style: const TextStyle(fontSize: 14),
                     ),
                   ],
@@ -252,6 +280,54 @@ class HotelDetails extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future addToFavourite() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var currentUser = _auth.currentUser;
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection("users-favourite-hotels");
+    return _collectionRef
+        .doc(currentUser!.email)
+        .collection("hotels")
+        .doc()
+        .set({
+      "name": widget.hotelName,
+      "location": widget.location,
+      "price": widget.price,
+      "images": widget.imgUrl,
+      "rating": widget.rating,
+      "details": widget.facilities,
+    }).then((value) {
+      _showToast("Added to favorites");
+    });
+  }
+
+  Future removeFromFavorite() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var currentUser = _auth.currentUser;
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection("users-favourite-hotels");
+    return _collectionRef
+        .doc(currentUser!.email)
+        .collection("hotels")
+        .where("name", isEqualTo: widget.hotelName)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.delete();
+        _showToast("Removed from favorites");
+      });
+    });
+  }
+
+  void _showToast(String message) {
+    showToast(
+      
+      message,
+      duration: Duration(seconds: 2),
+      position: ToastPosition.bottom,
     );
   }
 }
