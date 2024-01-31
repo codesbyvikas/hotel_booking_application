@@ -11,6 +11,8 @@ dependencies:
   cloud_firestore:
   firebase_core:
   firebase_auth:
+  awesome_notifications:
+  permission_handler:
   oktoast: ^3.0.0
   get:
   http: ^0.13.3
@@ -35,3 +37,4 @@ flutter:
     - assets/images/hotel.png
     - assets/images/hotel_book.png
     - assets/images/google.png
+    - assets/audio/notification.wav

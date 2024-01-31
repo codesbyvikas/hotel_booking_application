@@ -1,7 +1,9 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:oktoast/oktoast.dart';
+
 
 class HotelDetails extends StatefulWidget {
   final String imgUrl;
@@ -58,6 +60,8 @@ class _HotelDetailsState extends State<HotelDetails> {
                       ),
                     ),
                     onPressed: () {
+                      notify(1, "Congratulations",
+                          "Your Booking to ${widget.hotelName} is confirmed");
                       showDialog<String>(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
@@ -301,6 +305,7 @@ class _HotelDetailsState extends State<HotelDetails> {
       "details": widget.facilities,
     }).then((value) {
       _showToast("Added to favorites");
+      notify(2, "Confirmed", "${widget.hotelName} is added to Favourrtes");
     });
   }
 
@@ -318,16 +323,33 @@ class _HotelDetailsState extends State<HotelDetails> {
       querySnapshot.docs.forEach((doc) {
         doc.reference.delete();
         _showToast("Removed from favorites");
+        notify(
+            3, "Confirmed", "${widget.hotelName} is removed from Favourites");
       });
     });
   }
 
   void _showToast(String message) {
     showToast(
-      
       message,
       duration: Duration(seconds: 2),
       position: ToastPosition.bottom,
     );
   }
+
+  void notify(int id, String title, String body) async {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: id,
+          channelKey: 'key1',
+          title: title,
+          body: body,
+          bigPicture: "assets/images/hotel.png",
+          notificationLayout: NotificationLayout.BigPicture),
+    );
+  }
+
+
+
+
 }

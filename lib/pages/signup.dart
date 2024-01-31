@@ -216,7 +216,7 @@ class _SignUpState extends State<SignUp> {
         });
         print("Firebase response1111 ${response.id}");
         Navigator.of(context)
-            .pop(); // Replace 'context' with your actual context
+            .pop(); 
       } catch (exception) {
         print("Error Saving Data at firestore $exception");
       }
