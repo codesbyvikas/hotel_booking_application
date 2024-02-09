@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:oktoast/oktoast.dart';
 
-
 class HotelDetails extends StatefulWidget {
   final String imgUrl;
   final String hotelName;
@@ -348,8 +347,4 @@ class _HotelDetailsState extends State<HotelDetails> {
           notificationLayout: NotificationLayout.BigPicture),
     );
   }
-
-
-
-
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_application/constants/loading_widget.dart';
 import 'package:hotel_booking_application/pages/homepage.dart';
 import 'package:hotel_booking_application/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -214,11 +215,31 @@ class _LoginPageState extends State<LoginPage> {
 
   moveToHome(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (mounted) {
-        await Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+      try {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const CustomLoadingWidget();
+          },
         );
+
+        await Future.delayed(const Duration(seconds: 2)); // Simulating a delay
+
+        Navigator.pop(context); // Close the loading indicator dialog
+
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _loginemail.text.trim(),
+          password: _loginpassword.text.trim(),
+        );
+
+        if (mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+          );
+        }
+      } catch (e) {
+        // Handle any exceptions if necessary
       }
     }
   }
